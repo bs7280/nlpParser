@@ -1,0 +1,86 @@
+TODO:
+-For testing, make a bash script or something so I can just say $:test 1 or $
+$test 3 or whatever to test a certain test, then test list to list out all of the tests.
+then have a script to easily add tests to the main testing script. It will essentially
+just run the cooresponding python script in the test folder.
+
+-Make main.py nicer, more commented, and more clear as to what the hell is going on. 
+--Possibly make it so that it uses command line args to function and use test cases
+to actually test sentances
+
+-word_data.py and wordnetparser.py are seperate files but I might only need the first one.
+either way, organize it. I am actually pretty sure that only one file is needed. This is 
+ultimately and issue with main.py
+
+-add this project to github or bitbucket. I want to be able to add comments, and I need
+commits for that.
+
+-Make the parser.py thing work. I still need to do some planning with that. Like, how do
+I know when a sentance can't be parsed? I think I will be able to theoretically figure that out
+like if a parse tree keeps doing the same thing, and keeps going in a loop with the same 
+substituions available with no progress towards a sentance, then it can't be grammatical.
+I could also simply have multiple levels of grammar rules... like one level is all about 
+replacing all instances of Nouns with a noun phrase, then another level is about verb phrases
+and if its not possible to go to the next level then it is not a sentance 
+
+
+#############################################################
+#Idea for implimentation of matching grammar rules in parser#
+#############################################################
+
+First off, I will make my own function that will match grammar rules in a list of strings.
+
+I am trying to think of reasons to not go about doing this, opposed to regular expressions
+(or vice versa) but I think that a major pro of this will be allowing the possibility of 
+setting a priority in a stronger way, such that multiple things may be able to be substituted
+with the same thing (several ways to make a NP) but you want to set a priority of how to substitute things
+so that you don't mess up the parse tree. Fore example: say there is two ways to make a NP. One has much stricter
+requirements than the other, so if it is possible to use that one for the NP, use it over the other.
+
+Actually I think it is possible to do the above with regex and I will do regex, I will just have to
+be more careful and diligent when making the Regular expressions, by starting with a very simple 
+grammar model, having good tests, then slowly expanding the grammar model.
+
+Ok, So I thought regex would be a good idea because for some reason I thought I was
+better than the idea that REGEX causes more problems. I thought I made a good function
+that would make regex really useful but it is proving to be super fickle (Regex is, not my
+function). I might just have to make my own searching function, because it seems so hackish
+to be trying to mix string matching with parsing.
+
+Ok, So I thought regex would be a good idea because for some reason I thought I was
+better than the idea that REGEX causes more problems. I thought I made a good function
+that would make regex really useful but it is proving to be super fickle (Regex is, not my
+function). I might just have to make my own searching function, because it seems so hackish
+to be trying to mix string matching with parsing.
+
+
+Parser: 
+For the first part of the matching function: 
+  -I need to do more extensive testing. It was a coincidence that all of my tests came back successfully. 
+        -I did add another test, and as I predicted, it fails when it should not (test 6)
+        because it can't jump back to possible starts
+  -It only works with up to one match. Need to impliment a system that tracks all of the possible places
+    that the match can start back at, so it can Properly find all of the matches. Also needs to be able to 
+    find concourent matches like: ['D', '#'], ['N', '*'] .... ['D', '#'], ['N', '*'] would have two matches
+  -Once the intervals are properly determined, actually recursively determine the full interval
+  -Then get multi leveled patterns to work (should not be that hard, ultimately just another layer of recursion)
+  -Do simplifications too, as I described in one of the comments
+  -In the required terms section, in the matched intervals, determine the interval of where the optional terms occur,
+   then recursively call the same function again to see if the non required part was fully matched. 
+  -Possible test case: Det # adv * adj * N +  on the string DET adj adj adv N N or the string DET adv foo adj N
+   etc...
+  -get nested grammar rules to work 
+  -possibly try to refactor the code into even more functions
+
+
+A lot of the problems I am having with efficiently producing code and debugging it
+has to do with the fact that my testing is messy and a pain and I need a GDB
+like software to use (avoid constantly printing things out), which can partially be
+solved with a good testing system.
+    each test case/test for a function would be a text file that states the function name,
+    the inputs to the function, expected output, and a system of formatting to seperate
+    which terms go to which case. 
+    Should be really easy to just add a new text file with a header line and then 
+    add a line with a test case. could even have commands to make a new test case 
+    based off of command line arguments. 
+    I should definately make this tomorrow. 
